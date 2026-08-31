@@ -255,6 +255,8 @@ impl LeafDescriptor for RiscVLeafDescriptor {
             .set_read(true)
             .set_write(true)
             .set_execute(true)
+            .set_accessed(true)
+            .set_dirty(true)
     }
 
     fn to_raw(self) -> RawDescriptor {
@@ -281,5 +283,27 @@ impl RiscVLeafDescriptor {
     pub(crate) fn set_execute(mut self, value: bool) -> Self {
         self.raw.set_bit(3, value);
         self
+    }
+
+    pub(crate) fn set_accessed(mut self, value: bool) -> Self {
+        self.raw.set_bit(6, value);
+        self
+    }
+
+    pub(crate) fn set_dirty(mut self, value: bool) -> Self {
+        self.raw.set_bit(7, value);
+        self
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn riscv_eager_leaf_is_accessed_and_dirty() {
+        let descriptor = RiscVLeafDescriptor::from_level_paddr(1, 0x8020_0000).to_raw();
+
+        assert_eq!(descriptor & 0xcf, 0xcf);
     }
 }
