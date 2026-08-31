@@ -65,6 +65,14 @@ impl Arch for ArchImpl {
         switch_page_tables();
 
         sel4_cfg_if! {
+            if #[sel4_cfg(PLAT_CV1800B_DUO)] {
+                crate::fmt::debug_println_without_synchronization!(
+                    "SLIME_DUO loader page tables active"
+                );
+            }
+        }
+
+        sel4_cfg_if! {
             if #[sel4_cfg(MAX_NUM_NODES = "1")] {
                 (kernel_entry)(
                     ui_p_reg_start,
