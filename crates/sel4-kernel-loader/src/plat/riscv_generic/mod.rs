@@ -31,8 +31,10 @@ pub(crate) enum PlatImpl {}
 
 impl Plat for PlatImpl {
     fn init() {
-        assert!(get_hsm_exists());
-        start_all_harts();
+        if sel4_cfg_usize!(MAX_NUM_NODES) > 1 {
+            assert!(get_hsm_exists());
+            start_all_harts();
+        }
     }
 
     fn put_char(c: u8) {

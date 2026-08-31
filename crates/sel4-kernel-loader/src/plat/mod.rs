@@ -13,7 +13,7 @@ sel4_cfg_if! {
     } else if #[sel4_cfg(all(ARCH_ARM, PLAT_BCM2711))] {
         #[path = "bcm2711/mod.rs"]
         mod imp;
-    } else if #[sel4_cfg(all(ARCH_RISCV, any(PLAT_SPIKE, PLAT_QEMU_RISCV_VIRT, PLAT_HIFIVE)))] {
+    } else if #[sel4_cfg(all(ARCH_RISCV, any(PLAT_SPIKE, PLAT_QEMU_RISCV_VIRT, PLAT_HIFIVE, PLAT_CV1800B_DUO)))] {
         #[path = "riscv_generic/mod.rs"]
         mod imp;
     }
