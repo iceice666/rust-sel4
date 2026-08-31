@@ -48,6 +48,15 @@ impl<'a> MkLeafArgs<'a> {
     pub(crate) fn identity_descriptor<T: LeafDescriptor>(&self) -> T {
         self.descriptor(|vaddr| vaddr)
     }
+
+    #[cfg(test)]
+    pub(crate) fn new_for_test(scheme: &'a Scheme, level: Level, vaddr: u64) -> Self {
+        Self {
+            scheme,
+            level,
+            vaddr,
+        }
+    }
 }
 
 pub(crate) struct RegionContent {
