@@ -16,10 +16,10 @@ sel4_cfg_if! {
     } else if #[sel4_cfg(all(ARCH_ARM, PLAT_BCM2712))] {
         #[path = "bcm2712/mod.rs"]
         mod imp;
-    } else if #[sel4_cfg(all(ARCH_RISCV, any(PLAT_SPIKE, PLAT_QEMU_RISCV_VIRT, PLAT_HIFIVE)))] {
-        #[path = "riscv_generic/mod.rs"]
-        mod imp;
-    }
+ } else if #[sel4_cfg(all(ARCH_RISCV, any(PLAT_SPIKE, PLAT_QEMU_RISCV_VIRT, PLAT_HIFIVE, PLAT_CV1800B_DUO)))] {
+ #[path = "riscv_generic/mod.rs"]
+ mod imp;
+ }
 }
 
 // HACK for rustfmt
