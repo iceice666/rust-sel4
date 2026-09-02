@@ -146,8 +146,15 @@ global_asm! {
     r#"
             mov rsp, __sel4_runtime_common__stack_bottom
             mov rbp, rsp
-            sub rsp, 0x8 // Stack must be 16-byte aligned before call
-            push rbp
+            // The stack must be 16-byte aligned at each `call`, so that the
+            // callee sees `rsp % 16 == 8` once the return address is pushed.
+            // `__sel4_runtime_common__stack_bottom` is 16-byte aligned and two
+            // `call`s separate this point from Rust code: the one below, and
+            // the one in `__sel4_runtime_common__call_rust_entrypoint`. One
+            // 8-byte adjustment makes both land correctly; adjusting twice
+            // leaves Rust entered with `rsp % 16 == 0`, and the first SSE spill
+            // in the entrypoint's callees (`movaps`) then raises #GP.
+            sub rsp, 0x8
             call __sel4_runtime_common__call_rust_entrypoint
         1:  jmp 1b
     "#,
