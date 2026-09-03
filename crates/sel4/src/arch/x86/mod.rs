@@ -112,6 +112,10 @@ pub(crate) mod cap_type_arch {
     pub type Granule = _4k;
 
     declare_cap_type!(IOPortControl);
+    // A range of x86 I/O ports issued by `IOPortControl`. seL4 exposes the
+    // in/out invocations for it; without this type they are unreachable from
+    // Rust, which leaves a root task unable to drive a legacy serial port.
+    declare_cap_type!(IOPort);
 }
 
 pub(crate) mod cap_arch {
@@ -149,4 +153,5 @@ pub(crate) mod cap_arch {
     declare_cap_alias!(PageTable);
 
     declare_cap_alias!(IOPortControl);
+    declare_cap_alias!(IOPort);
 }
