@@ -150,6 +150,10 @@ where
         .unwrap()
         > 1;
 
+    let thead_maee = kernel_config
+        .get("PLAT_CV1800B_DUO")
+        .is_some_and(|value| value.as_bool() == Some(true));
+
     let min_level_align = 1
         << (0..scheme.num_levels())
             .map(|level| scheme.level_align_bits(level))
@@ -181,6 +185,7 @@ where
                     vaddr,
                     masked_virt_addr_range,
                     phys_to_virt_offset,
+                    thead_maee,
                 );
                 addr_slot = Some(root_vaddr);
                 bytes

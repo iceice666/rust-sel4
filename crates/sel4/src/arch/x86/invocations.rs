@@ -341,6 +341,31 @@ impl<C: InvocationContext> IOPortControl<C> {
     }
 }
 
+impl<C: InvocationContext> IOPort<C> {
+    /// Corresponds to `seL4_X86_IOPort_In8`.
+    ///
+    /// The port must lie inside the range this capability was issued for; the
+    /// kernel refuses the invocation otherwise, which is what makes port
+    /// access a capability rather than an ambient instruction.
+    pub fn ioport_in8(self, port: u16) -> Result<u8> {
+        let ret = self.invoke(|cptr, ipc_buffer| {
+            ipc_buffer
+                .inner_mut()
+                .seL4_X86_IOPort_In8(cptr.bits(), port)
+        });
+        Error::or(ret.error, ret.result)
+    }
+
+    /// Corresponds to `seL4_X86_IOPort_Out8`.
+    pub fn ioport_out8(self, port: u16, value: u8) -> Result<()> {
+        Error::wrap(self.invoke(|cptr, ipc_buffer| {
+            ipc_buffer
+                .inner_mut()
+                .seL4_X86_IOPort_Out8(cptr.bits(), port.into(), value.into())
+        }))
+    }
+}
+
 impl<C: InvocationContext> AsidControl<C> {
     /// Corresponds to `seL4_X86_ASIDControl_MakePool`.
     pub fn asid_control_make_pool(self, untyped: Untyped, dst: &AbsoluteCPtr) -> Result<()> {
